@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-Allow: /
-Sitemap: https://banda-1663-zola.pages.dev/sitemap.xml
