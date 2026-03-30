@@ -8,11 +8,36 @@ Zola was preinstalled in the v1 Pages build image but was dropped in v2/v3. With
 
 The relevant change is in [cloudflare/ew/pages-infra!1167](https://gitlab.cfdata.org/cloudflare/ew/pages-infra/-/merge_requests/1167).
 
-## What this repo tests
+## How this repo was created
 
-That `zola build` succeeds on a Cloudflare Pages build **without** setting a `ZOLA_VERSION` environment variable. If Zola is correctly preinstalled, the build passes. If not, it fails with `zola: command not found`.
+Following the official [Cloudflare Pages Zola deploy guide](https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/):
 
-## Cloudflare Pages settings
+1. Installed Zola locally via `brew install zola`
+2. Ran `zola init banda-1663-zola` with the following answers:
+   - URL: `https://banda-1663-zola.pages.dev`
+   - Enable Sass compilation: `Y`
+   - Enable syntax highlighting: `y`
+   - Build a search index: `y`
+3. Added minimal `templates/base.html` and `templates/index.html` so `zola build` produces output
+4. Added `.gitignore` to exclude the `public/` build output directory
+
+## Testing plan
+
+The goal is to confirm that a Zola site builds successfully on the **v2/v3 build image without `ZOLA_VERSION` set**.
+
+### Steps
+
+1. Connect this repo to a Cloudflare Pages project pointed at the **staging** build image
+2. Trigger a build with the settings below — **do not set `ZOLA_VERSION`**
+3. Confirm the build passes (Zola is found and runs successfully)
+4. Confirm the deployed site loads at the Pages URL
+
+### Expected result
+
+- **Before the fix**: build fails with `zola: command not found`
+- **After the fix**: build succeeds, site deploys
+
+### Cloudflare Pages settings
 
 | Setting                | Value        |
 | ---------------------- | ------------ |
